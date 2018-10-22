@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    .main-container
+        .container
+            br
+            h1 #{title}
+            
+            //- i.fas.fa-4x.fa-wallet
+            //- i.fas.fa-2x.fa-exchange-alt
+            h3.repayTxt Send money across Nigeria with ease
+            p.txt Transfer with just the click of a button...
+
+            br
+            
+            a.btn.btn-primary.singleT(href='/paymentform', role='button') SINGLE TRANSFER
+
+            a.btn.btn-primary.bulkT(href='/', role='button') BULK TRANSFER
+

@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    .container
+        br
+        h1 #{title}
+        form(method="POST", action="/paymentform")
+
+            #form-group.col-md-6
+                label Amount to send?     
+                input.form-control(name="amount", type="number" placeholder="100")
+            br
+            #form-group.col-md-6
+                label(for="") Recipient's Bank Name:
+                select#bankName.form-control(name="bank_name")
+                    each bankNm in bank_name
+                        option(selected='' value=bankNm.code) #{bankNm.name}
+            br
+            #form-group.col-md-6
+                label(for="") Recipient's Account Number:
+                input.form-control(name="account_number", type="number")
+                br 
+            #form-group.col-md-6
+                label(for="") Description:
+                input.form-control(name="description", type="text" placeholder="optional")
+                br
+
+                input.btn.btn-primary(type="submit", value="Continue")
+
+                nav(aria-label='Page navigation example')
+                    ul.pagination.justify-content-end
+                        li.page-item.disabled
+                        a.page-link(href='/', tabindex='-1') Back
+                        
+                        li.page-item
+                        a.page-link(href='#') Next
