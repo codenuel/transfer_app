@@ -12,8 +12,8 @@ block content
             br
             #form-group.col-md-6
                 label(for="") Recipient's Bank Name:
-                select#bankName.form-control(name="bank_name", onclick="request")
-                    //- for bank in bank_name
+                select#bankName.form-control(name="bank_name", onclick="getBanks()")
+                    for bank in bank_name
                         option(selected='', value=bank.code) #{bank.name}
             br
             #form-group.col-md-6

@@ -6,7 +6,7 @@ var request = require('request');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 
-    let b_list = '';
+    let b_list = [];
 
     var options = { method: 'GET', url: 'https://ravesandboxapi.flutterwave.com/banks?country=NG', headers: { 'content-type': 'application/json' } };
 
@@ -20,21 +20,22 @@ router.get('/', function(req, res, next) {
         for (var i = 0; i < bank_list.length; i++){
             b_code = bank_list[i].code;
             b_name = bank_list[i].name;
+            b_all = b_code + ' ' + b_name;
 
-            b_list += '<option selected' + b_code +'>'+ b_name + '</option>';
-            
+            console.log(b_all);
+            // console.log(b_name);
+
             // b_list.push(b_name)
             // return b_list
             
-            // console.log(b_code);
-            // console.log(b_name);
             // console.log("banks in array", b_list)
+            // b_list += '<option selected' + b_code +'>'+ b_name + '</option>';
         }
 
 
     });
 
-    document.getElementById('bankName').innerHTML = b_list;
+    // document.getElementById('bankName').innerHTML = b_list;
 
     // console.log("this is bank list", b_list)
 
