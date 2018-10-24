@@ -23,30 +23,15 @@ router.get('/', function(req, res, next) {
             b_all = b_code + ' ' + b_name;
 
             console.log(b_all);
-            // console.log(b_name);
-
-            // b_list.push(b_name)
-            // return b_list
             
-            // console.log("banks in array", b_list)
-            // b_list += '<option selected' + b_code +'>'+ b_name + '</option>';
+            // b_listy = b_list.push(b_all)
+            // console.log(b_listy)
+            // return b_list;
         }
+        return b_all;
 
 
-    });
-
-    // document.getElementById('bankName').innerHTML = b_list;
-
-    // console.log("this is bank list", b_list)
-
-    // var select_bank = ('#bankName');
-
-    //  getJSON('data.JSON', function(data){
-    //     select.html('');
-    //     for(var i = 0; i <= data['data'].length; i++){
-    //         $select.append('<option id="' + data['people'][i]['code'] + '">' + data['data'][i]['name'] + '</option>');
-    //     }
-    // })
+    });  
  
     res.render('form', {title: 'Single Transfer', bank_name: b_list});
 

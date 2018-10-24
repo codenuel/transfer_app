@@ -40,9 +40,35 @@ a.nav-link{
   color: #ffffff;
   text-align: center;
   padding-top: 20px;
+  margin-top: 60px
 }
 
 .txt {
   color: #ccc;
   text-align: center;
+}
+
+.inputContainer {
+  margin-top: 150px;
+}
+
+.inputAmount {
+  height: 60px !important;
+}
+
+.amountBtn {
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+}
+
+.nairaField {
+  border-radius: 0.25rem 0 0 0.25rem !important;
+  border-right: none !important;
+  padding: 10px 20px !important;
+} 
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */ 
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
