@@ -17,6 +17,9 @@ router.get('/', function(req, res, next) {
 
         // var b_code;
         var bank_list = banks.data;
+        // for (var propertyName in bank_list){
+        //     display(propertyName + '' + bank_list[propertyName])
+        // }
         for (var i = 0; i < bank_list.length; i++){
             b_code = bank_list[i].code;
             b_name = bank_list[i].name;

@@ -27,7 +27,7 @@ module.exports = {
                 "IP": data.IP,
                 "txRef": "MC-" + Date.now(),// your unique merchant reference
                 "meta": [{metaname: "flightID", metavalue: "123949494DC"}],
-                "redirect_url": "https://rave-webhook.herokuapp.com/receivepayment",
+                "redirect_url": "https://webhook.site/9ef5dbeb-eabc-4571-8644-5bd58c8d22d0",
                 "device_fingerprint": "69e6b7f0b72037aa8428b70fbe03986c"
               }
         ).then(resp => {
