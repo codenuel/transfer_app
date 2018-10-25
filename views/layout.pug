@@ -42,20 +42,72 @@ html
                     var recipient_account = $("#recipient-account").val();
                     var message = $("#message-text").val();
 
-                     $.post("/account-verify",
-                    {
-                        recipient_bank: "recipient-bank",
-                        recipient_account: "recipient-account"
-                    },
-                    function(data, status){
-                        alert("Data: " + data + "\nStatus: " + status);
-                    });
+                    //- $.post("/account-verify",
+                    //- {
+                    //-     recipient_bank: "recipient-bank",
+                    //-     recipient_account: "recipient-account"
+                    //- },
+                    //- function(data, status){
+                    //-     alert("Data: " + data + "\nStatus: " + status);
+                    //- });
 
-                    alert(amount);
-                    alert(sender_email);
-                    alert(recipient_bank);
-                    alert(recipient_account);
-                    alert(message);
+                    $.ajax({
+                        url: '/account-verify',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        headers: {
+                        
+                        },
+                        type: 'post',
+                        data: {
+                            recipient_bank: bank_name,
+                            recipient_account: account_number
+                           
+                        },
+                        dataType: 'json',
+                        success: function (resp) {
+                            console.log(resp);
+                            var transferResp = resp;
+                            var errors = false;
+
+                            if(!recipient_bank || !recipient_account) {
+                                errors = true
+                            }
+
+                            if(errors){
+                            alert('Please complete the form');
+                            }else{
+                            getpaidSetup(
+                                {
+                                    amount: amount,
+                                    sender_email: sender_email,
+                                    recipient_bank: bank_name,
+                                    recipient_account: account_number,
+                                    country: "NG",
+                                    currency: "NGN",
+                                    custom_logo: '',
+                                    custom_description: transferResp.description,
+                                    custom_title: 'Ventillum Limited',
+                                    payment_method: "both",
+                                    txref: transferResp.reference,
+                                    PBFPubKey: api_key,
+                                    integrity_hash: "", //integrity hash is gotten from the checksum integrity hash implementation
+                                    onclose:function(response) {
+                                        window.location = '/payments/verify?ref=' + transferResp.reference;
+                                    },
+                                    callback:function(response) { //console.log(response.tx)
+                                    window.location = '/payments/verify?ref=' + transferResp.reference;
+                                    }
+                                }
+                            );
+                            }
+                        },
+                        error: function(err){
+                            console.log(err);
+                            alert(err.toString());
+                        }
+                    });
                 });
             });
 

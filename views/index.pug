@@ -32,7 +32,7 @@ block content
                                 form
                                 .form-group
                                     label.col-form-label(for='sender-email') Senders Email Address:
-                                    input#rsender-email.form-control(type='email')
+                                    input#rsender-email.form-control(type='email', name='sender_email')
                                 .form-group
                                     label.col-form-label(for='recipient-bank') Recipient's Bank:
                                     select#recipient-bank.form-control( name='bank_name')
@@ -40,10 +40,10 @@ block content
                                             option(value=bank.code) #{bank.name}
                                 .form-group
                                     label.col-form-label(for='recipient-account') Recipient's Account Number:
-                                    input#recipient-account.form-control.inputAccount(type='number')
+                                    input#recipient-account.form-control.inputAccount(type='number', name='account_number')
                                 .form-group
                                     label.col-form-label(for='message-text') Description:
-                                    textarea#message-text.form-control
+                                    textarea#message-text.form-control(name='description')
                             .modal-footer
                                 //- button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                                 button#btn-continue.btn.btn-success(type='button' href="") Continue

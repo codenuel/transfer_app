@@ -7,14 +7,16 @@ var raveCtrl = require('../controllers/controller');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  var options = { method: 'GET', url: 'https://ravesandboxapi.flutterwave.com/banks?country=NG', headers: { 'content-type': 'application/json' } };
+  var options = { method: 'GET', url: 'https://ravesandboxapi.flutterwave.com/banks?country=NG', 
+                  headers: { 'content-type': 'application/json' } 
+                };
 
   var banks = false;
   request(options, function (error, response, body) {
       if (error) throw new Error(error);
 
       banks = JSON.parse(body);
-      console.log(banks)
+      // console.log(banks)
       res.render('index', { title: '', banks : banks.data });
 
   });  
