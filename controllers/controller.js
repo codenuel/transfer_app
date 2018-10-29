@@ -40,7 +40,7 @@ module.exports = {
                 console.log(response.body.data.tx);
     
                 return response;
-    // transfer function here
+        // transfer function here
                 
             })
             
@@ -48,6 +48,8 @@ module.exports = {
 
         return err;
         })
+
+        rave.Transfer.initiate()
         
     }
 }
