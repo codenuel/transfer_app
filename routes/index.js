@@ -28,20 +28,18 @@ router.get('/', function(req, res, next) {
 
 router.post('/account-verify', function(req, res, next){
 
-  var bankcode = req.body.recipient_account;
-  var recipientacct  = req.body.recipient_bank;
+  // var bankcode = req.body.recipient_account;
+  // var recipientacct  = req.body.recipient_bank;
 
-  console.log(bankcode)
-  console.log(recipientacct)
+  // console.log(bankcode)
+  // console.log(recipientacct)
+  req.body.PBFPubKey = process.env.PUBLIC_KEY
 
-  var options = { method: 'POST', url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/resolve_account',
-                form: { 
-                  destbankcode: bankcode, 
-                  recipientaccount: recipientacct,
-                  PBFPubKey: "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X"
-                },
+  var options = { method: 'POST', 
+                // url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/resolve_account',
+                url: 'https://ravesandbox.azurewebsites.net/flwv3-pug/getpaidx/api/resolve_account',
+                form: req.body,
                 headers: { 'content-type': 'application/json' }
-
                   
                 };
   request(options, function (error, response, body) {
@@ -60,18 +58,18 @@ router.post('/account-verify', function(req, res, next){
 
 router.get('/verify-tx', function(req, res, next){
 
-  var reference = res.querry.ref;
-  var SECRET_KEY  = "FLWSECK-6577e947f692e979e2d306ab4ce0a282-X";
-  console.log(reference)
+  var reference = res.query.ref;
+  var SECRET_KEY  = process.env.PUBLIC_KEY;
+  
+  console.log(reference);
+  console.log(SECRET_KEY);
 
-  var options = { method: 'POST', url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify',
-                form: { 
-                  txref: reference,
-                  SECKEY: SECRET_KEY
-                },
-                headers: { 'content-type': 'application/json' }
+  var options = { 
+                  method: 'POST', 
+                  url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify',
+                  form: { txref: reference, SECKEY: SECRET_KEY},
+                  headers: { 'content-type': 'application/json' }
 
-                  
                 };
   request(options, function (error, response, body) {
       if (error) throw new Error(error);
