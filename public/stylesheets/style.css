@@ -72,3 +72,17 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
+
+.success-msg{
+  color: #00ff67;
+  font-size: 11px;
+}
+
+.has-error{
+  color: #ff0034;
+  font-size: 11px;
+}
+
+#error_msg {
+  font-size: 11px;
+}

@@ -7,25 +7,12 @@ html
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css")
         link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
         
-
-        
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-dark
             .container
                 a.navbar-brand(href='/') Transfers
-                button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
-                    span.navbar-toggler-icon
-                #navbarNav.collapse.navbar-collapse
-                    //- ul.navbar-nav
-                    //- li.nav-item
-                    //- a.nav-link(href='/') Transfer 
-                    //- span.sr-only (current)
         
         block content
-        
-        hr
-        footer 
-            p copyright &copy; 2019
     
         script(src="https://code.jquery.com/jquery-3.1.1.min.js")
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js')
@@ -41,26 +28,43 @@ html
                     if (amount.length === 0){
                         alert("Please Input An Amount");
                     }else{
-                        $("#Modal-1").modal()
+                        $("#Modal-1").modal();   
                     }
                 })
 
                 $("#recipient-account").keyup(function() {
                     var recipient_bank = $("#recipient-bank").val();
                     var recipient_account = $("#recipient-account").val();
+                    var PubKey = "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X";
+                    var accountName = $("#recipient-account-name");
 
                     if(recipient_account.length === 10){
                         $.ajax({
-                            url: '/account-verify',
+                            url: 'https://ravesandbox.azurewebsites.net/flwv3-pug/getpaidx/api/resolve_account',
                             type: 'post',
                             data: {
-                                
-                                recipient_bank: recipient_bank,
-                                recipient_account: recipient_account
+                                recipientaccount: recipient_account,
+                                destbankcode: recipient_bank,
+                                PBFPubKey: PubKey,
                             },
                             dataType: 'json',
                             success: function (resp) {
-                                console.log(resp);
+                                if(resp.data.data.responsecode == 00) {
+                                    console.log(resp);
+                                    //- $('#accountName').val(resp.data.data.accountname);
+                                    accountName.val(resp["data"]["data"]["accountname"]);
+                                    $('#error_msg').text(resp.message);    
+                                    $('#recipient-account').addClass('success-msg');
+                                    //- $("#continue").attr({"disabled":false});
+                                }else if (resp.data.data.responsecode == 'RN0') {
+                                    $('#error_msg').text(resp.data.data.responsemessage);
+                                    $('#recipient-account').addClass('has-error');
+                                } else {
+                                    $('#error_msg').text('There is an issue with your bank number. Please cross-check');
+                                    $('#recipient-account').addClass('has-error');
+                                }
+                                //- console.log(resp);
+                                //- accountName.val(resp["data"]["data"]["accountname"]);
                             },
                             error: function(err){
                                 console.log(err);
@@ -79,7 +83,6 @@ html
                     var recipient_account = $("#recipient-account").val();
                     var description = $("#description").val();
                     var reference = $("#txRef").val();
-
                     //- var transferResp = resp;
                     var errors = false;
 
@@ -91,8 +94,11 @@ html
                     alert('Please complete the form');
                     }else{
                         $("button.close").click()
-                        getpaidSetup(
-                            {
+
+                        $.ajax({
+                            url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/hosted/pay',
+                            type: 'post',
+                            data: {
                                 customer_email: sender_email,
                                 customer_firstname: '',
                                 customer_lastname: '',
@@ -102,121 +108,22 @@ html
                                 currency: "NGN",
                                 custom_logo: '',
                                 custom_description: description,
-                                custom_title: 'Newlife Enterprise',
+                                custom_title: 'Enter a card to be charged',
                                 payment_method: "both",
                                 txref: reference,
+                                redirect_url: "http://localhost:3000/transfer?bankcode=" + recipient_bank + "&accountno=" +  recipient_account + "&amount=" + amount,
                                 PBFPubKey: "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X",
-                                onclose:function(response) {
-                                    window.location = '/verify-transaction?ref=' + ref;
-                                },
-                                callback:function(response) { //console.log(response.tx)
-                                    window.location = '/verify-transaction?ref=' + ref;
-                                }
-                            } 
-                        );
+                            },
+                            dataType: 'json',
+                            success: function (resp) {
+                                console.log(resp["data"]["link"]);
+                                window.open(resp["data"]["link"], "_blank");
+                            },
+                            error: function(err){
+                                console.log(err);
+                                //- alert(err.toString());
+                            }
+                        });
                     }
                 });
-
             });
-            
-            //- $(document).ready(function(){
-            //-     var recipient_bank = $("#recipient-bank")
-            //-     var recipient_account = $("#recipient-account")
-                
-            //-     recipient_account.keyup(function() {
-                    
-            //-         console.log(`${recipient_bank.val()} : ${recipient_account.val()}`);
-
-            //-         if(recipient_account.val().length === 10){
-            //-             console.log("now sending")
-            //-             data = {
-            //-                 destbankcode: recipient_bank.val(),
-            //-                 recipientaccount: recipient_account.val(),
-            //-             }
-
-            //-             fetch('/account-verify', {
-            //-                 method: "POST", // *GET, POST, PUT, DELETE, etc.
-            //-                 mode: "cors", // no-cors, cors, *same-origin
-            //-                 cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            //-                 credentials: "same-origin", // include, *same-origin, omit
-            //-                 headers: {
-            //-                     "Content-Type": "application/json; charset=utf-8",
-            //-                     // "Content-Type": "application/x-www-form-urlencoded",
-            //-                 },
-            //-                 redirect: "follow", // manual, *follow, error
-            //-                 referrer: "no-referrer", // no-referrer, *client
-            //-                 body: JSON.stringify(data), // body data type must match "Content-Type" header
-            //-             }).then(response => console.log(response)); // parses response to JSON
-            //-             //- $.ajax({
-            //-             //-     url: '/account-verify',
-            //-             //-     data: {
-                                
-            //-             //-         destbankcode: recipient_bank.val(),
-            //-             //-         recipientaccount: recipient_account.val()
-            //-             //-     },
-            //-             //-     type: 'post',
-            //-             //-     dataType: 'json',
-            //-             //-     contentType: 'application/json',
-            //-             //-     success: function (resp) {
-            //-             //-         console.log(resp);
-            //-             //-     },
-            //-             //-     error: function(err){
-            //-             //-         console.log(err);
-            //-             //-         //- alert(err.toString());
-            //-             //-     }
-            //-             //- });
-                        
-            //-         }
-            //-     });
-                
-            //-     $("#btn-continue").click(function(){
-
-            //-         var amount = $("#amount").val();
-            //-         var sender_email = $("#rsender-email").val();
-            //-         var recipient_bank = $("#recipient-bank").val();
-            //-         var recipient_account = $("#recipient-account").val();
-            //-         var description = $("#description").val();
-            //-         var reference = $("#txRef").val();
-
-            //-         //- var transferResp = resp;
-            //-         var errors = false;
-
-            //-         if(!amount || !sender_email || !recipient_bank || !recipient_account) {
-            //-             errors = true
-            //-         }
-
-            //-         if(errors){
-            //-         alert('Please complete the form');
-            //-         }else{
-            //-             $("button.close").click()
-            //-             getpaidSetup(
-            //-                 {
-            //-                     customer_email: sender_email,
-            //-                     customer_firstname: '',
-            //-                     customer_lastname: '',
-            //-                     customer_phone: '',
-            //-                     amount: amount,
-            //-                     country: "NG",
-            //-                     currency: "NGN",
-            //-                     custom_logo: '',
-            //-                     custom_description: description,
-            //-                     custom_title: 'Newlife Enterprise',
-            //-                     payment_method: "both",
-            //-                     txref: reference,
-            //-                     PBFPubKey: "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X",
-            //-                     integrity_hash: "", //integrity hash is gotten from the checksum integrity hash implementation
-            //-                     onclose:function(response) {
-            //-                         window.location = '/verify-transaction?ref=' + ref;
-            //-                     },
-            //-                     callback:function(response) { //console.log(response.tx)
-            //-                         window.location = '/verify-transaction?ref=' + ref;
-            //-                     }
-            //-                 } 
-            //-             );
-            //-         }
-            //-     });
-
-            //- });
-        
-
-           

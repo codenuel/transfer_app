@@ -5,9 +5,6 @@ block content
         .container
             br
             h1 #{title}
-            
-            //- i.fas.fa-4x.fa-wallet
-            //- i.fas.fa-2x.fa-exchange-alt
             h3.repayTxt Send money across the country with ease
             p.txt Transfer with just the click of a button...
             p#demo
@@ -41,18 +38,18 @@ block content
                                 .form-group
                                     label.col-form-label(for='recipient-account') Recipient's Account Number:
                                     input#recipient-account.form-control.inputAccount(type='number', name='account_number', maxlength="10", placeholder="0690000321")
+                                    span#error_msg
+                                    //- span#success_msg
                                 .form-group
                                     label.col-form-label(for='recipient-account-name') Recipient's Account Name:
                                     input#recipient-account-name.form-control.inputAccount(type='acctname', name='account_name', readonly)
+                                    
                                 .form-group
                                     label.col-form-label(for='description') Description:
                                     input#description.form-control(name='description', placeholder='Short Description')
                                 .form-group
                                     label.col-form-label(for='reference') Reference:
-                                    input#txRef.form-control(name='reference', placeholder='Transaction Reference')
+                                    input#txRef.form-control(name='reference',)
                             .modal-footer
                                 //- button.btn.btn-secondary(type='button', data-dismiss='modal') Close
                                 button#btn-continue.btn.btn-success(type='button', href="") Continue
-
-
-                                
