@@ -7,6 +7,7 @@ html
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css")
         link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
         
+        
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-dark
             .container
@@ -18,10 +19,11 @@ html
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js')
         script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js')
         script(src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js" type="text/javascript")
+        script(src="https://unpkg.com/sweetalert/dist/sweetalert.min.js")      
         
         script.
-
             $(document).ready(function(){
+                pubkey = "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X";
                 
                 $("#amountBtn").click(function(){
                     var amount = $("#amount").val();
@@ -35,8 +37,8 @@ html
                 $("#recipient-account").keyup(function() {
                     var recipient_bank = $("#recipient-bank").val();
                     var recipient_account = $("#recipient-account").val();
-                    var PubKey = "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X";
                     var accountName = $("#recipient-account-name");
+                    
 
                     if(recipient_account.length === 10){
                         $.ajax({
@@ -45,7 +47,7 @@ html
                             data: {
                                 recipientaccount: recipient_account,
                                 destbankcode: recipient_bank,
-                                PBFPubKey: PubKey,
+                                PBFPubKey: pubkey,
                             },
                             dataType: 'json',
                             success: function (resp) {
@@ -108,17 +110,21 @@ html
                                 currency: "NGN",
                                 custom_logo: '',
                                 custom_description: description,
-                                custom_title: 'Enter a card to be charged',
+                                custom_title: 'Please Enter Card Details',
                                 payment_method: "both",
                                 txref: reference,
                                 redirect_url: "http://localhost:3000/transfer?bankcode=" + recipient_bank + "&accountno=" +  recipient_account + "&amount=" + amount,
-                                PBFPubKey: "FLWPUBK-a5715a67d24e61ce3e7bf79ae22ef524-X",
+                                PBFPubKey: pubkey,
                             },
                             dataType: 'json',
                             success: function (resp) {
                                 console.log(resp["data"]["link"]);
                                 window.open(resp["data"]["link"], "_blank");
+                                
                             },
+
+                            onclose: function() {},
+                           
                             error: function(err){
                                 console.log(err);
                                 //- alert(err.toString());

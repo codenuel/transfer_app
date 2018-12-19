@@ -2,11 +2,13 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var raveCtrl = require('../controllers/controller');
-require('dotenv').config();
+var dotenv = require('dotenv').config();
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
+/* List banks in select dropdown */
   var options = { method: 'GET', url: 'https://ravesandboxapi.flutterwave.com/banks?country=NG', 
                   headers: { 'content-type': 'application/json' } 
                 };
@@ -18,9 +20,12 @@ router.get('/', function(req, res, next) {
       banks = JSON.parse(body);
       // console.log(banks)
       res.render('index', { title: '', banks : banks.data });
+      
   });  
 });
 
+
+// Account resolve
 router.post('/account-verify', function(req, res, next){
   req.body.PBFPubKey = process.env.PUBLIC_KEY
   var options = { method: 'POST', 
@@ -36,6 +41,8 @@ router.post('/account-verify', function(req, res, next){
   });
 });
 
+
+//Verify transaction
 router.get('/verify-tx', function(req, res, next){
 
   var reference = res.query.ref;
@@ -43,7 +50,7 @@ router.get('/verify-tx', function(req, res, next){
   console.log(reference)
   console.log(SECRET_KEY)
 
-  var options = { 
+  var options = {
                   method: 'POST', 
                   url: 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify',
                   form: { txref: reference, SECKEY: SECRET_KEY},
@@ -59,6 +66,8 @@ router.get('/verify-tx', function(req, res, next){
   });
 });
 
+
+//Transfer
 router.post('/transfer', function(req, res, next) {
   var reference = req.query.flwref;
   var seckey = process.env.SECRET_KEY;
@@ -66,7 +75,7 @@ router.post('/transfer', function(req, res, next) {
   var account_number = req.query.accountno;
   var amount = req.query.amount;
 
-  console.log(reference)
+  console.log(reference);
   var options = { 
                   method: 'POST', 
                   url: 'https://ravesandboxapi.flutterwave.com/v2/gpx/transfers/create',
@@ -80,7 +89,7 @@ router.post('/transfer', function(req, res, next) {
       console.log(resp);
 
       // res.status(200).json(respp);
-      res.render('success', {title: 'Your transfer to ' + account_number + ' was successful. Thank you for banking with us!'});
+      res.render('success', {title: 'Your transfer to ' + account_number + ' was successful. Thank you for using Rave!'});
 
   }); 
 });
